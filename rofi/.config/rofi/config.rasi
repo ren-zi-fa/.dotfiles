@@ -1,0 +1,41 @@
+configuration {
+modi: "window,drun,ssh,combi";
+font: "hack 10";
+combi-modi: "window,drun,ssh";
+modi: "drun,run,window";
+show-icons: true;
+icon-theme: "Papirus";
+drun-display-format: "{icon} {name}";
+font: "JetBrainsMono Nerd Font 15";
+display-drun: "Apps";
+display-run: "Run";
+display-window: "Windows";
+matching: "fuzzy";
+cycle: true;
+click-to-exit: true;
+
+ }
+@theme "solarized"
+window {
+    width: 40%;
+    border: 0px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    spacing: 5px;
+    scrollbar: false;
+}
+
+element {
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+element selected {
+    background-color: @selected-background;
+    text-color: @selected-foreground;
+}
