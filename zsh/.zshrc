@@ -107,10 +107,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias cdc="cd"
 alias fd="fdfind"
-alias ls="eza --icons=always --color=always -a"
+alias ls="eza --icons=always --color=always "
 alias ll="eza --icons=always --color=always -la"
 alias tree="exa --icons --tree"
+alias bat="batcat"
 ff() {
   local dir
   dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
