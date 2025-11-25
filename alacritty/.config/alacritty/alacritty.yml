@@ -8,7 +8,7 @@ window:
     x: 20  # ruang horizontal
     y: 20  # ruang vertikal
   dynamic_title: true
-  startup_mode: Maximized 
+  startup_mode: Windowed 
   decorations: full       
   transparency: true       
   opacity: 0.9 

@@ -1,49 +1,37 @@
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
+vim.g.mapleader = " "
 
-vim.opt.number = true
-vim.opt.relativenumber = true
+-- bootstrap lazy and all plugins
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
--- Warna dan tampilan
-vim.opt.termguicolors = true
-vim.opt.cursorline = true
-vim.opt.signcolumn = "yes"
-vim.opt.wrap = false
+if not vim.uv.fs_stat(lazypath) then
+  local repo = "https://github.com/folke/lazy.nvim.git"
+  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+end
 
--- Indentasi dan format otomatis
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
-vim.opt.smartindent = true
-vim.opt.autoindent = true
+vim.opt.rtp:prepend(lazypath)
 
--- Encoding dan file
-vim.opt.encoding = "utf-8"
-vim.opt.fileencoding = "utf-8"
+local lazy_config = require "configs.lazy"
 
--- ================================
--- ======== MOUSE & CLIPBOARD =====
--- ================================
+-- load plugins
+require("lazy").setup({
+  {
+    "NvChad/NvChad",
+    lazy = false,
+    branch = "v2.5",
+    import = "nvchad.plugins",
+  },
 
-vim.opt.mouse = "a"                  -- Bisa klik, drag, scroll, copy
-vim.opt.clipboard = "unnamedplus"    -- Integrasi clipboard sistem
+  { import = "plugins" },
+}, lazy_config)
 
+-- load theme
+dofile(vim.g.base46_cache .. "defaults")
+dofile(vim.g.base46_cache .. "statusline")
 
--- ================================
--- ========== KEYBINDING ==========
--- ================================
+require "options"
+require "autocmds"
 
--- Simpan file (Ctrl+S)
-vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>', { noremap = true, silent = true })
-
--- Select all (Ctrl+A)
-vim.api.nvim_set_keymap('n', '<C-a>', 'ggVG', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-a>', '<Esc>ggVG', { noremap = true, silent = true })
-
--- Undo (Ctrl+Z)
-vim.api.nvim_set_keymap('n', '<C-z>', 'u', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-z>', '<Esc>u', { noremap = true, silent = true })
-
--- Redo (Ctrl+Y)
-vim.api.nvim_set_keymap('n', '<C-y>', '<C-r>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-y>', '<Esc><C-r>', { noremap = true, silent = true })
-
+vim.schedule(function()
+  require "mappings"
+end)
