@@ -8,6 +8,7 @@
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH=$PATH:$HOME/go/bin
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -118,7 +119,12 @@ ff() {
   dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
   cd "$dir" || return
 }
-
+fuck() {
+  cd ~ || return
+  local dir
+  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
+  cd "$dir" || return
+}
 alias cls="clear"
 alias econf='file="$(fd --type f --hidden --exclude .git | fzf --height 50% --reverse --border)" && [[ -n "$file" ]] && nvim "$file"'
 
@@ -156,3 +162,11 @@ export PATH="$HOME/.flutter-sdk/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="$PATH:/home/nzy/.config/composer/vendor/bin"
+
+perm() {
+  for f in "$@"; do
+    stat -c "%a %n" "$f"
+  done
+}
