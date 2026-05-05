@@ -119,7 +119,7 @@ ff() {
   dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
   cd "$dir" || return
 }
-fuck() {
+f() {
   cd ~ || return
   local dir
   dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
@@ -170,3 +170,4 @@ perm() {
     stat -c "%a %n" "$f"
   done
 }
+export PATH="$PATH:/home/nzy/Antigravity"
