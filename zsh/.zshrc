@@ -171,3 +171,15 @@ perm() {
   done
 }
 export PATH="$PATH:/home/nzy/Antigravity"
+dcl() {
+  docker compose -f docker-compose.local.yml --env-file .env.local "$@"
+}
+dcdb() {
+  docker compose -f docker-compose.db.yml --env-file .env.dev "$@"
+}
+dcp() {
+  docker compose -f docker-compose.production.yml --env-file .env.prod "$@"
+}
+
+
+
