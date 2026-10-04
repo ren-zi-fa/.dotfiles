@@ -1,41 +1,122 @@
 configuration {
-modi: "window,drun,ssh,combi";
-font: "hack 10";
-combi-modi: "window,drun,ssh";
-modi: "drun,run,window";
-show-icons: true;
-icon-theme: "Papirus";
-drun-display-format: "{icon} {name}";
-font: "JetBrainsMono Nerd Font 15";
-display-drun: "Apps";
-display-run: "Run";
-display-window: "Windows";
-matching: "fuzzy";
-cycle: true;
-click-to-exit: true;
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";
 
- }
-@theme "solarized"
+    drun-display-format: "{icon}  {name}";
+    display-drun: "Applications";
+    display-run: "Run";
+    display-window: "Windows";
+
+    font: "JetBrainsMono Nerd Font 13";
+
+    sidebar-mode: false;
+}
+
+* {
+    bg: #1e1e2eee;
+    bg-alt: #313244ee;
+    fg: #cdd6f4;
+    fg-muted: #a6adc8;
+    accent: #89b4fa;
+    urgent: #f38ba8;
+
+    background-color: transparent;
+    text-color: @fg;
+
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
 window {
-    width: 40%;
-    border: 0px;
-    border-radius: 10px;
-    padding: 10px;
+    width: 650px;
+    location: center;
+    anchor: center;
+
+    border: 2px;
+    border-color: @accent;
+    border-radius: 18px;
+
+    background-color: @bg;
+    padding: 20px;
+}
+
+mainbox {
+    children: [
+        inputbar,
+        message,
+        listview
+    ];
+
+    spacing: 15px;
+}
+
+inputbar {
+    children: [
+        prompt,
+        entry
+    ];
+
+    background-color: @bg-alt;
+    border-radius: 12px;
+    padding: 14px 18px;
+    spacing: 12px;
+}
+
+prompt {
+    text-color: @accent;
+    font: "JetBrainsMono Nerd Font Bold 13";
+}
+
+entry {
+    placeholder: "Search applications...";
+    placeholder-color: @fg-muted;
+
+    text-color: @fg;
+    cursor: text;
+}
+
+message {
+    padding: 0 5px;
 }
 
 listview {
-    lines: 8;
+    lines: 6;
     columns: 1;
+
+    fixed-height: false;
+    dynamic: true;
+
     spacing: 5px;
     scrollbar: false;
 }
 
 element {
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: 10px;
+
+    background-color: transparent;
+}
+
+element normal {
+    text-color: @fg;
 }
 
 element selected {
-    background-color: @selected-background;
-    text-color: @selected-foreground;
+    background-color: @accent;
+    text-color: #1e1e2e;
+}
+
+element selected-text {
+    text-color: #1e1e2e;
+}
+
+element-icon {
+    size: 32px;
+    margin: 0 12px 0 0;
+}
+
+element-text {
+    vertical-align: 0.5;
 }
