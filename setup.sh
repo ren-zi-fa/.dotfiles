@@ -72,9 +72,11 @@ $SUDO apt-get install -y \
     zsh \
     fzf \
     fd-find \
+    ripgrep \
     bat \
     htop \
     bmon \
+    fastfetch \
     cron \
     python3 \
     python3-pip \
@@ -92,6 +94,15 @@ $SUDO apt-get install -y \
     php-gd \
     php-fpm \
     php-pgsql
+
+# Set system timezone
+echo "==> Setting timezone to Asia/Jakarta..."
+
+if command -v timedatectl >/dev/null 2>&1; then
+    $SUDO timedatectl set-timezone Asia/Jakarta
+else
+    echo "timedatectl not available; skip timezone."
+fi
 
 # ==========================================
 # 2. Install Docker
@@ -187,6 +198,33 @@ if [[ ! -x "$NVIM_DIR/bin/nvim" ]]; then
     rm -f "$TMP_FILE"
     trap - EXIT
 fi
+
+# ==========================================
+# 4b. Install NvChad (Neovim config)
+# https://nvchad.com/docs/quickstart/install
+# ==========================================
+
+echo "==> Installing NvChad..."
+
+NVCHAD_DIR="$TARGET_HOME/.config/nvim"
+
+if [[ -e "$NVCHAD_DIR" || -L "$NVCHAD_DIR" ]]; then
+    echo "NvChad already installed."
+else
+    run_user mkdir -p "$TARGET_HOME/.config"
+
+    run_user git clone --depth=1 \
+        https://github.com/NvChad/starter \
+        "$NVCHAD_DIR"
+
+    # Hapus .git agar konfigurasi menjadi milik Anda sendiri.
+    run_user rm -rf "$NVCHAD_DIR/.git"
+fi
+
+# Catatan pasca-install (jalankan manual):
+#   - nvim  -> tunggu lazy.nvim selesai, lalu :MasonInstallAll dan :TSInstallAll
+#   - Gunakan Nerd Font (bukan varian *Mono) sebagai font terminal.
+#   - tree-sitter-cli dibutuhkan nvim-treesitter untuk install parser.
 
 # ==========================================
 # 5. Install Oh My Zsh
@@ -286,7 +324,7 @@ echo "==> Setting up dotfiles..."
 if [[ -d "$DOTFILES" ]]; then
     PACKAGES=()
 
-    for package in tmux zsh nvim oh-my-zsh; do
+    for package in tmux zsh oh-my-zsh; do
         if [[ -d "$DOTFILES/$package" ]]; then
             PACKAGES+=("$package")
         fi
@@ -330,6 +368,7 @@ git --version
 tmux -V
 zsh --version
 eza --version | head -n 1 || true
+fastfetch --version || true
 php --version | head -n 1 || true
 composer --version
 docker --version || true
