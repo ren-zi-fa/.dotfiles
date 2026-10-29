@@ -357,7 +357,27 @@ if ! command -v tldr >/dev/null 2>&1; then
 fi
 
 # ==========================================
-# 10. Stow dotfiles
+# 10. Install Node.js LTS + pnpm
+# ==========================================
+
+echo "==> Installing Node.js LTS..."
+
+if ! command -v node >/dev/null 2>&1; then
+    # NodeSource menyediakan Node.js LTS terbaru sebagai paket APT.
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | $SUDO bash -
+    $SUDO apt-get install -y nodejs
+else
+    echo "Node.js already installed."
+fi
+
+echo "==> Installing pnpm terbaru..."
+
+if ! command -v pnpm >/dev/null 2>&1; then
+    $SUDO npm install -g pnpm@latest
+fi
+
+# ==========================================
+# 11. Stow dotfiles
 # ==========================================
 
 echo "==> Setting up dotfiles..."
@@ -383,7 +403,7 @@ else
 fi
 
 # ==========================================
-# 11. Set default shell
+# 12. Set default shell
 # ==========================================
 
 echo "==> Setting default shell..."
@@ -399,7 +419,7 @@ if [[ -n "$ZSH_PATH" ]]; then
 fi
 
 # ==========================================
-# 12. Verification
+# 13. Verification
 # ==========================================
 
 echo
@@ -416,8 +436,10 @@ docker --version || true
 docker compose version || true
 python3 --version
 pipx --version
+node --version || true
+npm --version || true
+pnpm --version || true
 
 echo
 echo "Setup selesai untuk user: $TARGET_USER"
 echo "Jalankan sesi Zsh baru untuk memuat konfigurasi."
-echo "Node.js LTS belum diinstal."
