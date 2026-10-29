@@ -94,13 +94,15 @@ $SUDO apt-get install -y \
     php-fpm \
     php-pgsql
 
-# Set system timezone
+# Set system timezone (fallback to /etc/localtime when systemd is absent)
 echo "==> Setting timezone to Asia/Jakarta..."
 
-if command -v timedatectl >/dev/null 2>&1; then
-    $SUDO timedatectl set-timezone Asia/Jakarta
+if $SUDO timedatectl set-timezone Asia/Jakarta 2>/dev/null; then
+    :
 else
-    echo "timedatectl not available; skip timezone."
+    echo "timedatectl unavailable (no systemd); using /etc/localtime instead."
+    echo "Asia/Jakarta" | $SUDO tee /etc/timezone >/dev/null
+    $SUDO ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 fi
 
 # ==========================================
