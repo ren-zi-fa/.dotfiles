@@ -91,7 +91,54 @@ $SUDO apt-get install -y \
     php-pgsql
 
 # ==========================================
-# 2. Install eza repository
+# 2. Install Docker
+# ==========================================
+
+echo "==> Installing Docker..."
+
+if command -v docker >/dev/null 2>&1; then
+    echo "Docker already installed."
+else
+    $SUDO install -d -m 0755 /etc/apt/keyrings
+
+    DOCKER_DISTRO="$(. /etc/os-release && echo "$ID")"
+    case "$DOCKER_DISTRO" in
+        debian) DOCKER_REPO="debian" ;;
+        *)      DOCKER_REPO="ubuntu" ;;
+    esac
+
+    CODENAME="$(
+        set +u
+        . /etc/os-release
+        echo "${VERSION_CODENAME:-$UBUNTU_CODENAME}"
+    )"
+
+    curl -fsSL "https://download.docker.com/linux/$DOCKER_REPO/gpg" \
+        | $SUDO gpg --dearmor --yes \
+            -o /etc/apt/keyrings/docker.gpg
+
+    $SUDO chmod 644 /etc/apt/keyrings/docker.gpg
+
+    echo "deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$DOCKER_REPO $CODENAME stable" \
+        | $SUDO tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+    $SUDO apt-get update
+    $SUDO apt-get install -y \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io \
+        docker-buildx-plugin \
+        docker-compose-plugin
+fi
+
+if [[ "$TARGET_USER" != "root" ]]; then
+    $SUDO usermod -aG docker "$TARGET_USER"
+    echo "==> User $TARGET_USER ditambahkan ke grup 'docker'."
+    echo "    Logout/login ulang (atau jalankan 'newgrp docker') agar perubahan aktif."
+fi
+
+# ==========================================
+# 3. Install eza repository
 # ==========================================
 
 echo "==> Installing eza..."
@@ -112,7 +159,7 @@ $SUDO apt-get update
 $SUDO apt-get install -y eza
 
 # ==========================================
-# 3. Install Neovim
+# 4. Install Neovim
 # ==========================================
 
 echo "==> Installing Neovim..."
@@ -139,7 +186,7 @@ if [[ ! -x "$NVIM_DIR/bin/nvim" ]]; then
 fi
 
 # ==========================================
-# 4. Install Oh My Zsh
+# 5. Install Oh My Zsh
 # ==========================================
 
 echo "==> Installing Oh My Zsh..."
@@ -158,7 +205,7 @@ fi
 ZSH_CUSTOM="$OMZ_DIR/custom"
 
 # ==========================================
-# 5. Install Powerlevel10k
+# 6. Install Powerlevel10k
 # ==========================================
 
 echo "==> Installing Powerlevel10k..."
@@ -170,7 +217,7 @@ if [[ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]]; then
 fi
 
 # ==========================================
-# 6. Install Zsh plugins
+# 7. Install Zsh plugins
 # ==========================================
 
 echo "==> Installing Zsh plugins..."
@@ -188,7 +235,7 @@ if [[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]]; then
 fi
 
 # ==========================================
-# 7. Install Composer
+# 8. Install Composer
 # ==========================================
 
 echo "==> Installing Composer..."
@@ -218,7 +265,7 @@ if ! command -v composer >/dev/null 2>&1; then
 fi
 
 # ==========================================
-# 8. Install tldr using pipx
+# 9. Install tldr using pipx
 # ==========================================
 
 echo "==> Installing tldr..."
@@ -228,7 +275,7 @@ if ! command -v tldr >/dev/null 2>&1; then
 fi
 
 # ==========================================
-# 9. Stow dotfiles
+# 10. Stow dotfiles
 # ==========================================
 
 echo "==> Setting up dotfiles..."
@@ -254,7 +301,7 @@ else
 fi
 
 # ==========================================
-# 10. Set default shell
+# 11. Set default shell
 # ==========================================
 
 echo "==> Setting default shell..."
@@ -270,7 +317,7 @@ if [[ -n "$ZSH_PATH" ]]; then
 fi
 
 # ==========================================
-# 11. Verification
+# 12. Verification
 # ==========================================
 
 echo
@@ -282,6 +329,8 @@ zsh --version
 eza --version | head -n 1 || true
 php --version | head -n 1 || true
 composer --version
+docker --version || true
+docker compose version || true
 python3 --version
 pipx --version
 
