@@ -101,22 +101,89 @@ source $ZSH/oh-my-zsh.sh
 # export ARCHFLAGS="-arch $(uname -m)"
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases are now kept in a separate module for
-# modularity and imported below.
+# plugins, and themes.
 # For a full list of active aliases, run `alias`.
 
-# Import modular alias/function definitions.
-if [[ -r "${0:A:h}/aliases.zsh" ]]; then
-  source "${0:A:h}/aliases.zsh"
-fi
+alias cdc="cd"
+alias fd="fdfind"
+alias ls="eza --icons=always --color=always "
+alias ll="eza --icons=always --color=always -la"
+alias tree="eza --icons --tree"
+alias bat="batcat"
+
+ff() {
+  local dir
+  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
+  cd "$dir" || return
+}
+
+f() {
+  cd ~ || return
+  local dir
+  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
+  cd "$dir" || return
+}
+
+alias cls="clear"
+alias econf='file="$(fd --type f --hidden --exclude .git | fzf --height 50% --reverse --border)" && [[ -n "$file" ]] && nvim "$file"'
+
+# Fungsi navigasi folder dan file menggunakan fzf.
+fzf_cd_file() {
+  # Gunakan find untuk menampilkan file dan folder di direktori saat ini.
+  local selected
+  selected=$(find . -maxdepth 1 | sed 's|^\./||' | fzf --height 40% --border --ansi \
+    --preview '[[ -d {} ]] && ls -l {} || cat {}' \
+    --bind 'ctrl-d:preview-page-down,ctrl-u:preview-page-up')
+
+  if [[ -n "$selected" ]]; then
+    if [[ -d "$selected" ]]; then
+      cd "$selected" || return
+      echo "Masuk ke folder: $selected"
+    else
+      echo "Isi file $selected:"
+      cat "$selected"
+    fi
+  fi
+}
+
+# Pintasan untuk menjalankan fzf_cd_file.
+alias gohome='cd ~/'
+alias fz='fzf_cd_file'
+alias py='python3'
+
+perm() {
+  for f in "$@"; do
+    stat -c "%a %n" "$f"
+  done
+}
+
+dcl() {
+  docker compose -f docker-compose.local.yml --env-file .env.local "$@"
+}
+
+dcdb() {
+  docker compose -f docker-compose.db.yml --env-file .env.dev "$@"
+}
+
+dcp() {
+  docker compose -f docker-compose.production.yml --env-file .env.prod "$@"
+}
+
+alias opencode-delete-session="opencode session list --format json \
+  | jq -r '.[].id' \
+  | xargs -r -n1 opencode session delete"
+
+alias docker-db='docker compose -f docker-compose.db.yml --env-file .env.dev'
+alias glog='git log --graph --oneline --all --decorate -50'
+
 export ZED_ALLOW_EMULATED_GPU=1
 
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
-#fluter-sdk
+# Flutter SDK
 export PATH="$HOME/.flutter-sdk/bin:$PATH"
-#nvmfornode
+# nvm (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -142,5 +209,3 @@ export STRIX_LLM="openrouter/nvidia/nemotron-3-super-120b-a12b:free"
 # Isi token OpenRouter kamu di bawah (jangan commit). Alternatif: export manual per sesi.
 # export LLM_API_KEY="sk-or-v1-PASTE_TOKEN_KAMU_DI_SINI"
 # export OPENROUTER_API_KEY="$LLM_API_KEY"
-
-# (aliases moved to aliases.zsh module)
