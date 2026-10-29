@@ -13,14 +13,15 @@ fi
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
-export ZSH=""
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export ZSH="$HOME/.oh-my-zsh"
+export PATH="$PATH:$HOME/.local/nvim-linux-x86_64/bin"
 export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:$HOME/.local/go/bin
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME=""
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -118,7 +119,7 @@ alias cdc="cd"
 alias fd="fdfind"
 alias ls="eza --icons=always --color=always "
 alias ll="eza --icons=always --color=always -la"
-alias tree="exa --icons --tree"
+alias tree="eza --icons --tree"
 alias bat="batcat"
 ff() {
   local dir
@@ -169,14 +170,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="$PATH:/home/nzy/.config/composer/vendor/bin"
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 
 perm() {
   for f in "$@"; do
     stat -c "%a %n" "$f"
   done
 }
-export PATH="$PATH:/home/nzy/Antigravity"
+export PATH="$PATH:/home/renzi/Antigravity"
 dcl() {
   docker compose -f docker-compose.local.yml --env-file .env.local "$@"
 }
@@ -189,3 +190,25 @@ dcp() {
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# opencode
+export PATH=/home/renzi/.opencode/bin:$PATH
+
+# Created by `pipx` on 2026-09-20 15:32:22
+export PATH="$PATH:/home/renzi/.local/bin"
+
+# strix
+export PATH=/home/renzi/.strix/bin:$PATH
+
+# Strix LLM via OpenRouter (free responsif 2026-09-28; Qwen/Gemma free sedang 429)
+export STRIX_LLM="openrouter/nvidia/nemotron-3-super-120b-a12b:free"
+# Isi token OpenRouter kamu di bawah (jangan commit). Alternatif: export manual per sesi.
+# export LLM_API_KEY="sk-or-v1-PASTE_TOKEN_KAMU_DI_SINI"
+# export OPENROUTER_API_KEY="$LLM_API_KEY"
+
+alias opencode-delete-session="opencode session list --format json \
+  | jq -r '.[].id' \
+  | xargs -r -n1 opencode session delete"
+
+alias docker-db='docker compose -f docker-compose.db.yml --env-file .env.dev'
+alias glog='git log --graph --oneline --all --decorate -50'
