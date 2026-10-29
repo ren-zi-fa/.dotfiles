@@ -71,3 +71,27 @@ stow --dir="$HOME/.dotfiles" --target="$HOME" tmux zsh
 This links `tmux` and `zsh` only. NvChad is installed by `setup.sh` (see
 above) rather than linked, and `rofi`/`alacritty` are desktop GUI configs
 that are not linked here.
+
+## Troubleshooting
+
+### Icons (glyphs) not showing in the terminal
+
+NvChad renders its icons with a Nerd Font. If icons appear as boxes or are
+missing, install the FiraCode Nerd Font Mono:
+
+```sh
+mkdir -p ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
+unzip -o FiraCode.zip -d ~/.local/share/fonts
+fc-cache -fv
+```
+
+Then verify the font is registered:
+
+```sh
+fc-match "FiraCode Nerd Font Mono"
+# FiraCodeNerdFontMono-Regular.ttf: "FiraCode Nerd Font Mono" "Regular"
+```
+
+Finally, set your terminal emulator (Alacritty, kitty, GNOME Terminal, …) to
+use `FiraCode Nerd Font Mono` and restart it.

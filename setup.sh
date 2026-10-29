@@ -76,7 +76,6 @@ $SUDO apt-get install -y \
     bat \
     htop \
     bmon \
-    fastfetch \
     cron \
     python3 \
     python3-pip \
@@ -102,6 +101,27 @@ if command -v timedatectl >/dev/null 2>&1; then
     $SUDO timedatectl set-timezone Asia/Jakarta
 else
     echo "timedatectl not available; skip timezone."
+fi
+
+# ==========================================
+# 1b. Install fastfetch (via PPA, Ubuntu)
+# ==========================================
+
+echo "==> Installing fastfetch..."
+
+if command -v fastfetch >/dev/null 2>&1; then
+    echo "fastfetch already installed."
+else
+    FASTFETCH_DISTRO="$(. /etc/os-release && echo "$ID")"
+
+    if [[ "$FASTFETCH_DISTRO" == "ubuntu" ]]; then
+        $SUDO apt-get install -y software-properties-common
+        $SUDO add-apt-repository -y ppa:zhangsongcui3371/fastfetch
+        $SUDO apt-get update
+        $SUDO apt-get install -y fastfetch
+    else
+        echo "fastfetch PPA hanya tersedia untuk Ubuntu; lewati."
+    fi
 fi
 
 # ==========================================
