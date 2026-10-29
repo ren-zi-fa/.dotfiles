@@ -8,11 +8,6 @@ set -Eeuo pipefail
 # Supported: Debian / Ubuntu
 # ==========================================
 
-if [[ $EUID -eq 0 ]]; then
-    echo "Jalankan script sebagai user biasa, bukan root."
-    exit 1
-fi
-
 if ! command -v apt-get >/dev/null 2>&1; then
     echo "Error: Script ini membutuhkan APT (Debian/Ubuntu)."
     exit 1
