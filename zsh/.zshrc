@@ -5,10 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -83,7 +79,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -105,59 +101,14 @@ source $ZSH/oh-my-zsh.sh
 # export ARCHFLAGS="-arch $(uname -m)"
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
+# plugins, and themes. Aliases are now kept in a separate module for
+# modularity and imported below.
 # For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias cdc="cd"
-alias fd="fdfind"
-alias ls="eza --icons=always --color=always "
-alias ll="eza --icons=always --color=always -la"
-alias tree="eza --icons --tree"
-alias bat="batcat"
-ff() {
-  local dir
-  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
-  cd "$dir" || return
-}
-f() {
-  cd ~ || return
-  local dir
-  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
-  cd "$dir" || return
-}
-alias cls="clear"
-alias econf='file="$(fd --type f --hidden --exclude .git | fzf --height 50% --reverse --border)" && [[ -n "$file" ]] && nvim "$file"'
 
-# Fungsi untuk fzf navigasi folder dan file
-fzf_cd_file() {
-  # Gunakan fd atau find untuk daftar semua file dan folder
-  local selected
-  selected=$(find . -maxdepth 1 | sed 's|^\./||' | fzf --height 40% --border --ansi \
-    --preview '[[ -d {} ]] && ls -l {} || cat {}' \
-    --bind 'ctrl-d:preview-page-down,ctrl-u:preview-page-up')
-
-  if [[ -n "$selected" ]]; then
-    if [[ -d "$selected" ]]; then
-      cd "$selected" || return
-      echo "Masuk ke folder: $selected"
-    else
-      echo "Isi file $selected:"
-      cat "$selected"
-    fi
-  fi
-}
-
-# Shortcut untuk menjalankan fzf_cd_file
-alias gohome='cd ~/'
-alias fz='fzf_cd_file'
-alias py='python3'
+# Import modular alias/function definitions.
+if [[ -r "${0:A:h}/aliases.zsh" ]]; then
+  source "${0:A:h}/aliases.zsh"
+fi
 export ZED_ALLOW_EMULATED_GPU=1
 
 export ANDROID_HOME=$HOME/Android/Sdk
@@ -172,33 +123,19 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 
-perm() {
-  for f in "$@"; do
-    stat -c "%a %n" "$f"
-  done
-}
-export PATH="$PATH:/home/renzi/Antigravity"
-dcl() {
-  docker compose -f docker-compose.local.yml --env-file .env.local "$@"
-}
-dcdb() {
-  docker compose -f docker-compose.db.yml --env-file .env.dev "$@"
-}
-dcp() {
-  docker compose -f docker-compose.production.yml --env-file .env.prod "$@"
-}
+export PATH="$PATH:$HOME/Antigravity"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # opencode
-export PATH=/home/renzi/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
 # Created by `pipx` on 2026-09-20 15:32:22
-export PATH="$PATH:/home/renzi/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # strix
-export PATH=/home/renzi/.strix/bin:$PATH
+export PATH=$HOME/.strix/bin:$PATH
 
 # Strix LLM via OpenRouter (free responsif 2026-09-28; Qwen/Gemma free sedang 429)
 export STRIX_LLM="openrouter/nvidia/nemotron-3-super-120b-a12b:free"
@@ -206,9 +143,4 @@ export STRIX_LLM="openrouter/nvidia/nemotron-3-super-120b-a12b:free"
 # export LLM_API_KEY="sk-or-v1-PASTE_TOKEN_KAMU_DI_SINI"
 # export OPENROUTER_API_KEY="$LLM_API_KEY"
 
-alias opencode-delete-session="opencode session list --format json \
-  | jq -r '.[].id' \
-  | xargs -r -n1 opencode session delete"
-
-alias docker-db='docker compose -f docker-compose.db.yml --env-file .env.dev'
-alias glog='git log --graph --oneline --all --decorate -50'
+# (aliases moved to aliases.zsh module)
