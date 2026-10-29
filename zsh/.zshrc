@@ -10,7 +10,6 @@ fi
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$PATH:$HOME/.local/nvim-linux-x86_64/bin"
 export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/.local/go/bin
 # Set name of the theme to load --- if set to "random", it will
@@ -91,11 +90,7 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+# export EDITOR='vim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -125,7 +120,7 @@ f() {
 }
 
 alias cls="clear"
-alias econf='file="$(fd --type f --hidden --exclude .git | fzf --height 50% --reverse --border)" && [[ -n "$file" ]] && nvim "$file"'
+alias econf='file="$(fd --type f --hidden --exclude .git | fzf --height 50% --reverse --border)" && [[ -n "$file" ]] && vim "$file"'
 
 # Fungsi navigasi folder dan file menggunakan fzf.
 fzf_cd_file() {

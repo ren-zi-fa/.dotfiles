@@ -6,7 +6,7 @@ Dotfiles configuration for a development environment on a VPS (Debian/Ubuntu).
 
 - **zsh** — Zsh + Oh My Zsh + Powerlevel10k + plugins (zsh-syntax-highlighting)
 - **tmux** — tmux configuration
-- **nvim** — Neovim + NvChad (installed by `setup.sh`, not versioned here)
+- **vim** — plain Vim (installed by `setup.sh`, no custom config)
 - **rofi** — Rofi launcher theme (desktop GUI only, not stowed yet)
 - **alacritty** — Alacritty terminal configuration (desktop GUI only, not stowed yet)
 - **setup.sh** — automated system packages and dotfiles installation
@@ -42,8 +42,8 @@ Dotfiles configuration for a development environment on a VPS (Debian/Ubuntu).
    ```
 
    The script installs system packages (including Docker, fastfetch, htop,
-   bmon, and cron), sets the timezone to Asia/Jakarta, installs eza, Neovim,
-   NvChad, Oh My Zsh, Powerlevel10k, zsh plugins, Composer, and tldr; links
+   bmon, and cron), sets the timezone to Asia/Jakarta, installs eza, Vim,
+   Oh My Zsh, Powerlevel10k, zsh plugins, Composer, and tldr; links
    the dotfiles to `$HOME` using GNU Stow; adds the user to the `docker`
    group; then sets zsh as the default shell.
 
@@ -52,14 +52,7 @@ Dotfiles configuration for a development environment on a VPS (Debian/Ubuntu).
    Log out and log back in (or reboot). This makes the new default shell
    and the `docker` group membership take effect.
 
-4. Finish the NvChad setup:
-
-   ```sh
-   nvim
-   ```
-
-   Wait for lazy.nvim to finish downloading plugins, then run
-   `:MasonInstallAll` and `:TSInstallAll`.
+4. Done — the editor is plain `vim` with no extra plugins or configuration.
 
 ### Link dotfiles only (without installing packages)
 
@@ -68,15 +61,15 @@ cd ~/.dotfiles
 stow --dir="$HOME/.dotfiles" --target="$HOME" tmux zsh
 ```
 
-This links `tmux` and `zsh` only. NvChad is installed by `setup.sh` (see
-above) rather than linked, and `rofi`/`alacritty` are desktop GUI configs
-that are not linked here.
+This links `tmux` and `zsh` only. Vim is installed by `setup.sh` (see above)
+and uses its default configuration, and `rofi`/`alacritty` are desktop GUI
+configs that are not linked here.
 
 ## Troubleshooting
 
 ### Icons (glyphs) not showing in the terminal
 
-NvChad renders its icons with a Nerd Font. If icons appear as boxes or are
+The prompt and `eza` use Nerd Font glyphs. If icons appear as boxes or are
 missing, install the FiraCode Nerd Font Mono:
 
 ```sh

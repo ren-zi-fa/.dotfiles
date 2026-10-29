@@ -196,76 +196,12 @@ $SUDO apt-get update
 $SUDO apt-get install -y eza
 
 # ==========================================
-# 4. Install Neovim
+# 4. Install Vim
 # ==========================================
 
-echo "==> Installing Neovim..."
+echo "==> Installing Vim..."
 
-NVIM_DIR="$TARGET_HOME/.local/nvim-linux-x86_64"
-
-if [[ ! -x "$NVIM_DIR/bin/nvim" ]]; then
-    TMP_FILE="$(mktemp --suffix=.tar.gz)"
-    trap 'rm -f "$TMP_FILE"' EXIT
-
-    curl -fsSL \
-        https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
-        -o "$TMP_FILE"
-
-    run_user mkdir -p "$TARGET_HOME/.local"
-
-    $SUDO tar -xzf "$TMP_FILE" \
-        -C "$TARGET_HOME/.local"
-
-    $SUDO chown -R "$TARGET_USER":"$(id -gn "$TARGET_USER")" "$NVIM_DIR"
-
-    rm -f "$TMP_FILE"
-    trap - EXIT
-fi
-
-# ==========================================
-# 4b. Install NvChad (Neovim config)
-# https://nvchad.com/docs/quickstart/install
-# ==========================================
-
-echo "==> Installing NvChad..."
-
-NVCHAD_DIR="$TARGET_HOME/.config/nvim"
-
-if [[ -e "$NVCHAD_DIR" || -L "$NVCHAD_DIR" ]]; then
-    echo "NvChad already installed."
-else
-    run_user mkdir -p "$TARGET_HOME/.config"
-
-    run_user git clone --depth=1 \
-        https://github.com/NvChad/starter \
-        "$NVCHAD_DIR"
-
-    # Hapus .git agar konfigurasi menjadi milik Anda sendiri.
-    run_user rm -rf "$NVCHAD_DIR/.git"
-fi
-
-# Catatan pasca-install (jalankan manual):
-#   - nvim  -> tunggu lazy.nvim selesai, lalu :MasonInstallAll dan :TSInstallAll
-#   - Gunakan Nerd Font (bukan varian *Mono) sebagai font terminal.
-#   - tree-sitter-cli dibutuhkan nvim-treesitter untuk install parser.
-
-# ==========================================
-# 4c. Make nvim available to root
-# ==========================================
-
-echo "==> Making nvim available to root..."
-
-# Symlink binary ke /usr/local/bin agar bisa dipakai semua user (termasuk root).
-$SUDO ln -sf "$NVIM_DIR/bin/nvim" /usr/local/bin/nvim
-
-# Bagikan config NvChad ke root (symlink), kecuali jika target user adalah root.
-ROOT_CONFIG="/root/.config/nvim"
-
-if [[ "$TARGET_USER" != "root" && ! -e "$ROOT_CONFIG" && ! -L "$ROOT_CONFIG" ]]; then
-    $SUDO mkdir -p /root/.config
-    $SUDO ln -s "$NVCHAD_DIR" "$ROOT_CONFIG"
-    echo "NvChad config di-share ke /root/.config/nvim."
-fi
+$SUDO apt-get install -y vim
 
 # ==========================================
 # 5. Install Oh My Zsh
@@ -428,6 +364,7 @@ echo "==> Installed versions"
 git --version
 tmux -V
 zsh --version
+vim --version | head -n 1
 eza --version | head -n 1 || true
 fastfetch --version || true
 php --version | head -n 1 || true
