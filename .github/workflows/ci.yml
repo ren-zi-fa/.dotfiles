@@ -27,11 +27,14 @@ jobs:
       - name: Zsh syntax check
         run: |
           zsh -n zsh/.zshrc
-          zsh -n zsh/aliases.zsh
 
       - name: Aliases smoke test
         run: |
-          zsh -c 'source zsh/aliases.zsh && alias ls && type ff && alias glog'
+          # .zshrc sources Oh My Zsh; stub it so we can load the file without a
+          # full Oh My Zsh install and verify the aliases/functions are defined.
+          mkdir -p "$HOME/.oh-my-zsh"
+          : > "$HOME/.oh-my-zsh/oh-my-zsh.sh"
+          zsh -c 'source zsh/.zshrc && alias ls && type ff && alias glog'
 
   setup-script:
     name: Run setup.sh in container
