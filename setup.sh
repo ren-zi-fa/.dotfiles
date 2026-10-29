@@ -77,6 +77,7 @@ $SUDO apt-get install -y \
     htop \
     bmon \
     cron \
+    ufw \
     python3 \
     python3-pip \
     python3-venv \
@@ -247,6 +248,24 @@ fi
 #   - nvim  -> tunggu lazy.nvim selesai, lalu :MasonInstallAll dan :TSInstallAll
 #   - Gunakan Nerd Font (bukan varian *Mono) sebagai font terminal.
 #   - tree-sitter-cli dibutuhkan nvim-treesitter untuk install parser.
+
+# ==========================================
+# 4c. Make nvim available to root
+# ==========================================
+
+echo "==> Making nvim available to root..."
+
+# Symlink binary ke /usr/local/bin agar bisa dipakai semua user (termasuk root).
+$SUDO ln -sf "$NVIM_DIR/bin/nvim" /usr/local/bin/nvim
+
+# Bagikan config NvChad ke root (symlink), kecuali jika target user adalah root.
+ROOT_CONFIG="/root/.config/nvim"
+
+if [[ "$TARGET_USER" != "root" && ! -e "$ROOT_CONFIG" && ! -L "$ROOT_CONFIG" ]]; then
+    $SUDO mkdir -p /root/.config
+    $SUDO ln -s "$NVCHAD_DIR" "$ROOT_CONFIG"
+    echo "NvChad config di-share ke /root/.config/nvim."
+fi
 
 # ==========================================
 # 5. Install Oh My Zsh
