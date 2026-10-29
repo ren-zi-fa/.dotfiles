@@ -75,6 +75,7 @@ $SUDO apt-get install -y \
     bat \
     htop \
     bmon \
+    cron \
     python3 \
     python3-pip \
     python3-venv \
