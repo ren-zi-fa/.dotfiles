@@ -67,6 +67,26 @@ configs that are not linked here.
 
 ## Troubleshooting
 
+### `tmux` fails with `missing or unsuitable terminal: alacritty`
+
+Alacritty sends `TERM=alacritty` over SSH, but the server may not have that
+terminfo entry. Install it on the VPS:
+
+```sh
+sudo apt-get install -y ncurses-term
+infocmp alacritty >/dev/null && echo OK
+```
+
+`setup.sh` already includes `ncurses-term`. Without it, `tmux`, `tput`, and
+some TUI apps (Vim, less) can misbehave over SSH.
+
+### Copy/paste from tmux does nothing
+
+The VPS is headless: `xclip`, `xsel`, and `wl-copy` cannot work there. tmux
+uses OSC 52 (`set-clipboard on`) to hand the copied text to the local
+terminal. Paste with the terminal's own shortcut (`Ctrl+Shift+V` in
+Alacritty), not with a tmux `C-v` binding.
+
 ### Icons (glyphs) not showing in the terminal
 
 The prompt and `eza` use Nerd Font glyphs. If icons appear as boxes or are

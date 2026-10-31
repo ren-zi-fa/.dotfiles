@@ -1,6 +1,20 @@
 [font]
 size = 16.0
 
+# Catatan untuk pemakaian SSH ke VPS headless:
+# Alacritty mengirim TERM=alacritty. Pasang paket `ncurses-term` di server
+# agar tmux/less/vim mengenali terminal ini. Kalau tidak bisa install paket,
+# aktifkan workaround berikut (mengorbankan sebagian capability):
+#
+# [env]
+# TERM = "xterm-256color"
+#
+# Clipboard dua arah via OSC 52 (Alacritty >= 0.13, default hanya "OnlyCopy").
+# Aktifkan hanya jika perlu remote app membaca clipboard lokal:
+#
+# [terminal]
+# osc52 = "CopyPaste"
+
 [font.normal]
 family = "FiraCode Nerd Font Mono"
 style = "Regular"

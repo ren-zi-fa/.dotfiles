@@ -69,10 +69,12 @@ $SUDO apt-get install -y \
     pkg-config \
     tmux \
     stow \
+    ncurses-term \
     zsh \
     fzf \
     fd-find \
     ripgrep \
+    jq \
     bat \
     htop \
     bmon \

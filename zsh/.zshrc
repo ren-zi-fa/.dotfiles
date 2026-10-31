@@ -101,21 +101,21 @@ source $ZSH/oh-my-zsh.sh
 
 alias cdc="cd"
 alias fd="fdfind"
-alias ls="eza --icons=always --color=always "
-alias ll="eza --icons=always --color=always -la"
-alias tree="eza --icons --tree"
+alias ls="eza --icons=auto --color=auto"
+alias ll="eza --icons=auto --color=auto -la"
+alias tree="eza --icons=auto --tree"
 alias bat="batcat"
 
 ff() {
   local dir
-  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
+  dir=$(fd --type d --hidden --exclude .git | fzf --ansi --preview 'ls -a --color=always {}') || return
   cd "$dir" || return
 }
 
 f() {
   cd ~ || return
   local dir
-  dir=$(fd --type d --hidden --exclude .git | fzf --preview 'ls -a --color=always {}') || return
+  dir=$(fd --type d --hidden --exclude .git | fzf --ansi --preview 'ls -a --color=always {}') || return
   cd "$dir" || return
 }
 
